@@ -53,6 +53,6 @@ function buscarVulnerabilidades(nome) {
 function filtrar() {
     input = document.getElementById('inputBusca');
     var filter = input.value.toUpperCase();
-
+//comentário
     buscarVulnerabilidades(filter);
 }
