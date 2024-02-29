@@ -65,7 +65,7 @@ app.post('/processar-xml', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { login, nome, senha } = req.body;
-    const query = `INSERT INTO tbl_user (login, nome, senha) VALUES (?, ?, ?)`;        //Ajustando SQL sem a inclusão direto do parametro de entrada do usuario
+    const query = `INSERT INTO tbl_user (login, nome, senha) VALUES ('${login}', '${nome}', '${senha}')`;
 
     db.query(query, (err, result) => {
         if (err) {
@@ -98,7 +98,7 @@ app.get('/login/:login/:senha', (req, res) => {
     const login = req.params.login;
     const senha = req.params.senha;
 
-    const query = `SELECT nome, id FROM tbl_user WHERE login = ? AND senha = ?`;//Ajustando SQL sem a inclusão direto do parametro de entrada do usuario
+    const query = `SELECT nome, id FROM tbl_user WHERE login = '${login}' AND senha = '${senha}'`;
 
     armazenarLog(query); 
 
@@ -319,10 +319,27 @@ app.get('/vulnerabilidades/novafiltragem/:nome', (request, response) => {
     response.json(query)
 });
 
+const { execFile } = require('child_process');
+//Correção Comand Injection
 app.get('/executeCat/:filename', (req, res) => {
     const filename = req.params.filename;
-    const command = `/usr/bin/cat ${filename}`;
+    if (!/^[a-zA-Z]+$/.test(filename)) {
+        return res.status(400).send('Nome de arquivo inválido.');
+    }
 
+    // Caminho para o programa cat
+    const cmd = '/usr/bin/cat';
+
+    // Executa o programa cat com o filename como argumento
+    execFile(cmd, [filename], (error, stdout, stderr) => {
+        if (error) {
+            console.error('Erro:', error);
+            return res.status(500).send('Erro ao executar o comando.');
+        }
+        // Retorna a saída do comando
+        res.send(stdout);
+    });
+    
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Erro ao executar o comando: ${error.message}`);
