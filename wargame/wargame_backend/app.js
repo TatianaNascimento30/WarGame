@@ -8,6 +8,7 @@ const { exec } = require('child_process');
 const libxmljs = require('libxmljs');
 
 const http = require('http');
+const { DOMParser } = require('xmldom');
 const fs = require('fs');
 const porta = process.env.port
 
@@ -269,16 +270,14 @@ app.post('/xml-data', (req, res) => {
         }
 
         try {
-            const xmlDoc = libxmljs.parseXml(xmlObj.toString(), {
-                noent: false, //CORIIGIDO AQUI
-            });
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlObj, 'text/xml');
 
-            console.log(xmlDoc.toString());
             const timestamp = new Date().getTime();
             const randomPart = Math.floor(Math.random() * 1000);
             const fileName = `arquivo_${timestamp}_${randomPart}.xml`;
 
-            const xmlString = xmlDoc.toString();
+            const xmlString = new XMLSerializer().serializeToString(xmlDoc);
 
             fs.writeFile(fileName, xmlString, (err) => {
                 if (err) {
