@@ -65,7 +65,7 @@ app.post('/processar-xml', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { login, nome, senha } = req.body;
-    const query = `INSERT INTO tbl_user (login, nome, senha) VALUES ('${login}', '${nome}', '${senha}')`;
+    const query = `INSERT INTO tbl_user (login, nome, senha) VALUES (?, ?, ?)`;        //Ajustando SQL sem a inclusão direto do parametro de entrada do usuario
 
     db.query(query, (err, result) => {
         if (err) {
@@ -98,7 +98,7 @@ app.get('/login/:login/:senha', (req, res) => {
     const login = req.params.login;
     const senha = req.params.senha;
 
-    const query = `SELECT nome, id FROM tbl_user WHERE login = '${login}' AND senha = '${senha}'`;
+    const query = `SELECT nome, id FROM tbl_user WHERE login = ? AND senha = ?`;//Ajustando SQL sem a inclusão direto do parametro de entrada do usuario
 
     armazenarLog(query); 
 
