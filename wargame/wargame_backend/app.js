@@ -94,7 +94,7 @@ function generateSessionID(userID) {
     return `${userID}-${randomPart}`;
 }
 
-app.get('/login/:login/:senha', (req, res) => {
+app.post('/login/:login/:senha', (req, res) => {  //Corrigido
     const login = req.params.login;
     const senha = req.params.senha;
 
