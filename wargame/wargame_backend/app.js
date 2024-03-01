@@ -301,7 +301,7 @@ app.get('/vulnerabilidades/novafiltragem/:nome', (request, response) => {
 
     let nome = request.params.nome;
 
-    const query = `SELECT * FROM tbl_vulnerabilidades WHERE nome LIKE '%${nome}%' `;
+    const query = "SELECT * FROM tbl_vulnerabilidades WHERE nome LIKE ?";
 
     db.query(query, (err, result) => {
         if (err) {
