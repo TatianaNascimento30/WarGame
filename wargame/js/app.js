@@ -3,7 +3,7 @@ function register() {
     const nome = document.getElementById('registerName').value;
     const senha = document.getElementById('registerPassword').value;
 
-    fetch('http://localhost:3000/register', {
+    fetch('https://localhost:3000/register', {  //Corrigido
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
